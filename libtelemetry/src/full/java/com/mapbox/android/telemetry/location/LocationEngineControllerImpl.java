@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat;
 import android.util.Log;
 import com.mapbox.android.core.location.LocationEngine;
 import com.mapbox.android.core.location.LocationEngineRequest;
+import androidx.core.os.BuildCompat;
 
 class LocationEngineControllerImpl implements LocationEngineController {
   private static final String TAG = "LocationController";
@@ -85,7 +86,11 @@ class LocationEngineControllerImpl implements LocationEngineController {
   private PendingIntent getPendingIntent() {
     // Implicit intent is required here to work with registering receiver via context
     Intent intent = new Intent(LocationUpdatesBroadcastReceiver.ACTION_LOCATION_UPDATED);
-    return PendingIntent.getBroadcast(applicationContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    int flags = PendingIntent.FLAG_UPDATE_CURRENT;
+    if (BuildCompat.isAtLeastS()) {
+      flags |= PendingIntent.FLAG_MUTABLE;
+    }
+    return PendingIntent.getBroadcast(applicationContext, 0, intent, flags);
   }
 
   private boolean checkPermissions() {
