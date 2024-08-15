@@ -7,11 +7,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.core.os.BuildCompat;
 
-import android.util.Log;
+import com.mapbox.android.core.ContextUtils;
 import com.mapbox.android.core.location.LocationEngine;
 import com.mapbox.android.core.location.LocationEngineRequest;
 
@@ -51,8 +53,7 @@ class LocationEngineControllerImpl implements LocationEngineController {
 
   private void registerReceiver() {
     try {
-      applicationContext.registerReceiver(locationUpdatesBroadcastReceiver,
-        new IntentFilter(LocationUpdatesBroadcastReceiver.ACTION_LOCATION_UPDATED));
+      ContextUtils.registerReceiver(applicationContext, locationUpdatesBroadcastReceiver, new IntentFilter(LocationUpdatesBroadcastReceiver.ACTION_LOCATION_UPDATED));
     } catch (IllegalArgumentException iae) {
       Log.e(TAG, iae.toString());
     }

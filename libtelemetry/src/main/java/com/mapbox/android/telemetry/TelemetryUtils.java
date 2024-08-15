@@ -1,5 +1,7 @@
 package com.mapbox.android.telemetry;
 
+import static com.mapbox.android.telemetry.MapboxTelemetryConstants.MAPBOX_SHARED_PREFERENCES;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -36,8 +38,6 @@ import javax.net.SocketFactory;
 
 import okhttp3.OkHttpClient;
 import okio.Buffer;
-
-import static com.mapbox.android.telemetry.MapboxTelemetryConstants.MAPBOX_SHARED_PREFERENCES;
 
 public class TelemetryUtils {
   private static final String TAG = "TelemetryUtils";
@@ -286,7 +286,7 @@ public class TelemetryUtils {
   @Nullable
   private static Intent registerBatteryUpdates(Context context) {
     try {
-      return context.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+      return ContextUtils.registerReceiver(context, null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
     } catch (Exception exc) {
       // There is a weird intermittent bug that causes SecurityException in android versions <= 4.2
       Log.e(TAG, String.format("%s: Failed receiver registration for ACTION_BATTERY_CHANGED", exc.toString()));

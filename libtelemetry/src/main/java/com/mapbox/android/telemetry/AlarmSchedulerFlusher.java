@@ -1,5 +1,8 @@
 package com.mapbox.android.telemetry;
 
+import static com.mapbox.android.telemetry.SchedulerFlusherFactory.SCHEDULER_FLUSHER_INTENT;
+import static com.mapbox.android.telemetry.SchedulerFlusherFactory.flushingPeriod;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -10,8 +13,7 @@ import android.os.SystemClock;
 
 import androidx.annotation.VisibleForTesting;
 
-import static com.mapbox.android.telemetry.SchedulerFlusherFactory.SCHEDULER_FLUSHER_INTENT;
-import static com.mapbox.android.telemetry.SchedulerFlusherFactory.flushingPeriod;
+import com.mapbox.android.core.ContextUtils;
 
 class AlarmSchedulerFlusher implements SchedulerFlusher {
   private final Context context;
@@ -34,7 +36,7 @@ class AlarmSchedulerFlusher implements SchedulerFlusher {
     }
     pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, flags);
     IntentFilter filter = new IntentFilter(SCHEDULER_FLUSHER_INTENT);
-    context.registerReceiver(receiver, filter);
+    ContextUtils.registerReceiver(context, receiver, filter);
   }
 
   @Override

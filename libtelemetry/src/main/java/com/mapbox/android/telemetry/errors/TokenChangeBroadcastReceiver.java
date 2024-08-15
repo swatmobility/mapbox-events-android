@@ -7,6 +7,8 @@ import android.content.IntentFilter;
 import androidx.annotation.NonNull;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.util.Log;
+
+import com.mapbox.android.core.ContextUtils;
 import com.mapbox.android.telemetry.MapboxTelemetryConstants;
 
 /**
