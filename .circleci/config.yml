@@ -109,16 +109,6 @@ jobs:
                 echo "export AWS_SDK_LOAD_CONFIG=1" >> $BASH_ENV
                 ./mbx-ci aws setup
       - run:
-          name: Generate Maven credentials
-          shell: /bin/bash -euo pipefail
-          command: |
-            aws s3 cp s3://mapbox/android/signing-credentials/secring.gpg secring.gpg
-            echo "NEXUS_USERNAME=$PUBLISH_NEXUS_USERNAME
-            NEXUS_PASSWORD=$PUBLISH_NEXUS_PASSWORD
-            signing.keyId=$SIGNING_KEYID
-            signing.password=$SIGNING_PASSWORD
-            signing.secretKeyRingFile=../secring.gpg" >> gradle.properties
-      - run:
           name: Update version name
           command: |
             if [[ $CIRCLE_TAG == telem-* ]]; then
@@ -132,17 +122,13 @@ jobs:
           name: Build libraries
           command: make release
       - deploy:
-          name: Publish to Maven Central and Mapbox SDK Registry
+          name: Publish to Mapbox SDK Registry
           command: |
             if [[ $CIRCLE_BRANCH == main ]]; then
-              make publish-core ;
-              make publish-telem ;
               make publish-all-to-sdk-registry ;
             elif [[ $CIRCLE_TAG == telem-* ]]; then
-              make publish-telem ;
               make publish-telemetry-to-sdk-registry ;
             elif [[ $CIRCLE_TAG == core-* ]]; then
-              make publish-core ;
               make publish-core-to-sdk-registry ;
             else
               echo "Skip, not a release branch"

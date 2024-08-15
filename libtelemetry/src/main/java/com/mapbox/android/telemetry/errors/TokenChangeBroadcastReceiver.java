@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import androidx.annotation.NonNull;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.work.ExistingWorkPolicy;
+import androidx.work.WorkManager;
 import android.util.Log;
 
 import com.mapbox.android.core.ContextUtils;
@@ -33,7 +35,11 @@ public class TokenChangeBroadcastReceiver extends BroadcastReceiver {
   public void onReceive(Context context, Intent intent) {
     try {
       // Start background job
-      ErrorReporterJobIntentService.enqueueWork(context);
+      WorkManager.getInstance(context)
+        .enqueueUniqueWork(
+          MapboxTelemetryConstants.ACTION_TOKEN_CHANGED,
+          ExistingWorkPolicy.KEEP,
+          ErrorReporterWorker.createWorkRequest());
       // Unregister receiver - we need it once at startup
       LocalBroadcastManager.getInstance(context).unregisterReceiver(this);
     } catch (Throwable throwable) {
